@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: chekin-services
+  docker:
+    compose:
+      enabled: false
+
+server:
+  port: 8084
+
+gateway:
+  internal:
+    token: "SuperSecretGatewayToken2026"

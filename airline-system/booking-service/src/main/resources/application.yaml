@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: booking-service
+
+  docker:
+    compose:
+      enabled: false
+      file: airline-system/docker-compose.yaml
+
+server:
+  port: 8082
+external:
+  services:
+    flight-service:
+      url: http://localhost:8081 # Ajusta el puerto según tu configuración
+gateway:
+  internal:
+    token: "SuperSecretGatewayToken2026"

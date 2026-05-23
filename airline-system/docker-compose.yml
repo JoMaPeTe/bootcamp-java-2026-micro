@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: airline_db_prod
+    environment:
+      POSTGRES_DB: airline_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - airline-network
+  flight-service:
+    build:
+      context: ./flight-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    networks:
+      - airline-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  booking-service:
+    build:
+      context: ./booking-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8080"
+    networks:
+      - airline-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  payment-service:
+    build:
+      context: ./payment-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"
+    networks:
+      - airline-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  checkin-service:
+    build:
+      context: ./checkin-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8080"
+    networks:
+      - airline-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  notification-service:
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8080"
+    networks:
+      - airline-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  iam-service:
+    build:
+      context: ./iam-backend
+      dockerfile: Dockerfile
+    ports:
+      - "8086:8086"
+    networks:
+      - airline-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev # Para que use H2 localmente si no quieres Docker-Postgres aún
+
+  apigateway:
+    build:
+      context: ./apigateway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - airline-network
+    depends_on:
+      - iam-service
+
+networks:
+  airline-network:
+    driver: bridge
+

@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: iam-backend
+  profiles:
+    active: dev
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000
+
+gateway:
+  internal:
+    token: ${GATEWAY_INTERNAL_TOKEN}
+---
+# ==========================================
+# PERFIL DEV: H2 en Memoria + Flyway
+# ==========================================
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:iam_db;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8086
+---
+# ==========================================
+# PERFIL PROD: PostgreSQL real + Flyway
+# ==========================================
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:bootcamp_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8086
+
+logging:
+  level:
+    com.programandoenjava.iambackend: info

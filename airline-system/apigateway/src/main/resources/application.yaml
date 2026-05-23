@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: apigateway
+
+  cloud:
+    gateway:
+      routes:
+        # ===== IAM Service (Autenticación) =====
+        - id: iam-service
+          uri: http://localhost:8086 # Acuérdate, lo movimos al 8086
+          predicates:
+            - Path=/api/auth/**
+
+        # ===== Flight Service (Vuelos) =====
+        - id: flight-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/flights/**
+
+        # ===== Booking Service (Reservas) =====
+        - id: booking-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/bookings/**
+
+        # ===== Payment Service (Pagos Mock) =====
+        - id: payment-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/payments/**
+        # ===== Check-in Service =====
+        - id: checkin-service
+          uri: http://localhost:8084 #
+          predicates:
+            - Path=/api/v1/checkin/**
+server:
+  port: 8080
+
+jwt:
+  secret: ${JWT_SECRET}
+
+gateway:
+  internal:
+    token: ${GATEWAY_INTERNAL_TOKEN}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
+  otlp:
+    metrics:
+      export:
+        enabled: false

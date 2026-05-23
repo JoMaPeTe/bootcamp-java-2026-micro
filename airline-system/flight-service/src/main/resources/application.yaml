@@ -1,0 +1,61 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: flight-service
+  docker:
+    compose:
+      enabled: false
+      file: airline-system/docker-compose.yaml
+
+  security:
+    user:
+      name: admin
+      password: ${SPRING_SECURITY_USER_PASSWORD}
+  sql:
+    init:
+      mode: always
+  jpa:
+    defer-datasource-initialization: true
+    open-in-view: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics # Exponemos los endpoints necesarios
+  endpoint:
+    prometheus:
+      enabled: true
+  health:
+    show-details: always
+
+  # Configuración de Métricas (Micrometer)
+  metrics:
+    tags:
+      application: ${spring.application.name} # Etiqueta global
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true # Histogramas HTTP para Grafana
+
+  # Configuración de Trazas (OpenTelemetry)
+  tracing:
+    sampling:
+      probability: 1.0 # 100% de muestreo para desarrollo (¡no usar 1.0 en prod real!)
+
+
+  otlp:
+    metrics:
+      export:
+        enabled: false # Le decimos que NO envíe métricas por OTLP (ya tenemos Prometheus)
+
+  # Exportador hacia Jaeger (usando OTLP)
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: http://localhost:4318/v1/traces
+
+gateway:
+  internal:
+    token: ${GATEWAY_INTERNAL_TOKEN}

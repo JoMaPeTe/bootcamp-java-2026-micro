@@ -1,0 +1,63 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+
+# Java / IDE/ Build
+*.class
+*.log
+out/
+target/
+build/
+.gradle/
+.mvn/
+*.jar
+*.war
+*.ear
+*.log
+.classpath
+.project
+.settings/
+/.idea/
+/.vscode/
+
+# Maven wrapper
+mvnw
+mvnw.cmd
+
+# OS
+Thumbs.db
+.DS_Store
